@@ -5,10 +5,11 @@ source "/home/hytale/server/functions.sh"
 LogAction "Set file permissions"
 
 if [ -z "${PUID}" ] || [ -z "${PGID}" ]; then
-    LogError "PUID and PGID not set. Please set these in the environment variables."
-    exit 1
+    LogWarn "PUID and PGID not set. Using default values (1001)."
+    PUID=1001
+    PGID=1001
 fi
-
+   
 usermod -o -u "${PUID}" hytale
 groupmod -o -g "${PGID}" hytale
 chown -R ${PUID}:${PGID} /home/hytale/server-files /home/hytale/
@@ -38,6 +39,7 @@ export MAX_PLAYERS
 export VIEW_DISTANCE
 export ENABLE_BACKUPS
 export BACKUP_FREQUENCY
+export BACKUP_DIR
 export DISABLE_SENTRY
 export USE_AOT_CACHE
 export AUTH_MODE
@@ -57,6 +59,7 @@ su - hytale -c "cd /home/hytale/server && \
     VIEW_DISTANCE='${VIEW_DISTANCE}' \
     ENABLE_BACKUPS='${ENABLE_BACKUPS}' \
     BACKUP_FREQUENCY='${BACKUP_FREQUENCY}' \
+    BACKUP_DIR='${BACKUP_DIR}' \
     DISABLE_SENTRY='${DISABLE_SENTRY}' \
     USE_AOT_CACHE='${USE_AOT_CACHE}' \
     AUTH_MODE='${AUTH_MODE}' \

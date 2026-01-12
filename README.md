@@ -42,7 +42,6 @@ Copy the `.env.example` file to a new file called `.env` and adjust the settings
 
 ### Quick Start
 
-**Authenticated Mode** (default - recommended)
 ```bash
 # 1. Start server
 docker-compose up -d
@@ -52,14 +51,6 @@ docker-compose logs -f
 
 # 3. Visit the URL in your browser and authenticate
 # Server continues automatically after authentication
-```
-
-**Offline Mode** (testing only)
-```bash
-AUTH_MODE=offline
-DOWNLOAD_ON_START=false
-
-docker-compose up -d
 ```
 
 ### Docker Compose
@@ -109,8 +100,8 @@ You can use the following values to change the settings of the server on boot.
 
 | Variable               | Default              | Description                                                                           |
 |------------------------|----------------------|---------------------------------------------------------------------------------------|
-| PUID                   | 1000                 | User ID for file permissions                                                          |
-| PGID                   | 1000                 | Group ID for file permissions                                                         |
+| PUID                   | 1001                 | User ID for file permissions                                                          |
+| PGID                   | 1001                 | Group ID for file permissions                                                         |
 | SERVER_NAME            | hytale-server-docker | Name of the server                                                                    |
 | DEFAULT_PORT           | 5520                 | The port the server listens on (UDP only)                            |
 | MAX_PLAYERS            | 20                   | Maximum number of players allowed on the server                                       |
@@ -118,10 +109,11 @@ You can use the following values to change the settings of the server on boot.
 | AUTH_MODE              | authenticated        | Authentication mode: `authenticated` or `offline`                                     |
 | ENABLE_BACKUPS         | false                | Enable automatic world backups                                                        |
 | BACKUP_FREQUENCY       | 30                   | Backup interval in minutes (if backups are enabled)                                   |
+| BACKUP_DIR             | /home/hytale/server-files/backups | Directory path for storing backups                              |
 | DISABLE_SENTRY         | true                 | Disable Sentry crash reporting                                                        |
 | USE_AOT_CACHE          | true                 | Use Ahead-of-Time compilation cache for faster startup                                |
 | ACCEPT_EARLY_PLUGINS   | false                | Allow early plugins (may cause stability issues)                                      |
-| MIN_MEMORY             | 4G                   | Minimum JVM heap size (e.g., 4G, 4096M)                                               |
+| MIN_MEMORY             |                      | Minimum JVM heap size (e.g., 4G). Leave unset to omit -Xms flag                      |
 | MAX_MEMORY             | 8G                   | Maximum JVM heap size (e.g., 8G, 8192M)                                               |
 | JVM_ARGS               |                      | Custom JVM arguments (optional)                                                       |
 | DOWNLOAD_ON_START      | true                 | Automatically download/update server files on startup                                 |

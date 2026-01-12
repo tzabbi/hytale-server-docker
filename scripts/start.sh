@@ -15,11 +15,11 @@ MAX_PLAYERS="${MAX_PLAYERS:-20}"
 VIEW_DISTANCE="${VIEW_DISTANCE:-12}"
 ENABLE_BACKUPS="${ENABLE_BACKUPS:-false}"
 BACKUP_FREQUENCY="${BACKUP_FREQUENCY:-30}"
+BACKUP_DIR="${BACKUP_DIR:-/home/hytale/server-files/backups}"
 DISABLE_SENTRY="${DISABLE_SENTRY:-true}"
 USE_AOT_CACHE="${USE_AOT_CACHE:-true}"
 AUTH_MODE="${AUTH_MODE:-authenticated}"
 ACCEPT_EARLY_PLUGINS="${ACCEPT_EARLY_PLUGINS:-false}"
-MIN_MEMORY="${MIN_MEMORY:-4096}"
 MAX_MEMORY="${MAX_MEMORY:-8192}"
 
 # Check if HytaleServer.jar exists
@@ -47,8 +47,13 @@ LogInfo "View distance: ${VIEW_DISTANCE} chunks ($(($VIEW_DISTANCE * 32)) blocks
 LogInfo "Authentication mode: ${AUTH_MODE}"
 
 # Build Java command with memory settings
-JVM_MEMORY="-Xms${MIN_MEMORY}M -Xmx${MAX_MEMORY}M"
-
+if [ -n "${MIN_MEMORY}" ]; then
+    JVM_MEMORY="-Xms${MIN_MEMORY} -Xmx${MAX_MEMORY}"
+    LogInfo "Memory: ${MIN_MEMORY} min, ${MAX_MEMORY} max"
+else
+    JVM_MEMORY="-Xmx${MAX_MEMORY}"
+    LogInfo "Memory: ${MAX_MEMORY} max (no minimum set)"
+fi
 # Build the startup command
 STARTUP_CMD="java ${JVM_MEMORY}"
 
@@ -86,8 +91,8 @@ if [ "${ACCEPT_EARLY_PLUGINS}" = "true" ]; then
     STARTUP_CMD="${STARTUP_CMD} --accept-early-plugins"
 fi
 
-if [ "${ENABLE_BACKUPS}" = "true" ]; then
-    STARTUP_CMD="${STARTUP_CMD} --backup --backup-frequency ${BACKUP_FREQUENCY}"
+if [ "${ENABLE_BACKUPS}" = "true" ]; then --backup-dir ${BACKUP_DIR}"
+    LogInfo "Automatic backups enabled (every ${BACKUP_FREQUENCY} minutes to ${BACKUP_DIR}UENCY}"
     LogInfo "Automatic backups enabled (every ${BACKUP_FREQUENCY} minutes)"
 fi
 
