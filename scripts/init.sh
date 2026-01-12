@@ -1,0 +1,74 @@
+#!/bin/bash
+# shellcheck source=scripts/functions.sh
+source "/home/hytale/server/functions.sh"
+
+LogAction "Set file permissions"
+
+if [ -z "${PUID}" ] || [ -z "${PGID}" ]; then
+    LogError "PUID and PGID not set. Please set these in the environment variables."
+    exit 1
+fi
+
+usermod -o -u "${PUID}" hytale
+groupmod -o -g "${PGID}" hytale
+chown -R ${PUID}:${PGID} /home/hytale/server-files /home/hytale/
+
+cat /branding
+
+if [ "${DOWNLOAD_ON_START:-true}" = "true" ]; then
+    download_server
+else
+    LogWarn "DOWNLOAD_ON_START is set to false, skipping server download"
+fi
+
+# shellcheck disable=SC2317
+term_handler() {
+    if ! shutdown_server; then
+        # Force shutdown if graceful shutdown fails
+        kill -SIGTERM "$(pgrep -f HytaleServer.jar)"
+    fi
+    tail --pid="$killpid" -f 2>/dev/null
+}
+
+trap 'term_handler' SIGTERM
+
+export DEFAULT_PORT
+export SERVER_NAME
+export MAX_PLAYERS
+export VIEW_DISTANCE
+export ENABLE_BACKUPS
+export BACKUP_FREQUENCY
+export DISABLE_SENTRY
+export USE_AOT_CACHE
+export AUTH_MODE
+export ACCEPT_EARLY_PLUGINS
+export MIN_MEMORY
+export MAX_MEMORY
+export JVM_ARGS
+export SESSION_TOKEN
+export IDENTITY_TOKEN
+export OWNER_UUID
+
+# Start the server as hytale user
+su - hytale -c "cd /home/hytale/server && \
+    DEFAULT_PORT='${DEFAULT_PORT}' \
+    SERVER_NAME='${SERVER_NAME}' \
+    MAX_PLAYERS='${MAX_PLAYERS}' \
+    VIEW_DISTANCE='${VIEW_DISTANCE}' \
+    ENABLE_BACKUPS='${ENABLE_BACKUPS}' \
+    BACKUP_FREQUENCY='${BACKUP_FREQUENCY}' \
+    DISABLE_SENTRY='${DISABLE_SENTRY}' \
+    USE_AOT_CACHE='${USE_AOT_CACHE}' \
+    AUTH_MODE='${AUTH_MODE}' \
+    ACCEPT_EARLY_PLUGINS='${ACCEPT_EARLY_PLUGINS}' \
+    MIN_MEMORY='${MIN_MEMORY}' \
+    MAX_MEMORY='${MAX_MEMORY}' \
+    JVM_ARGS='${JVM_ARGS}' \
+    SESSION_TOKEN='${SESSION_TOKEN}' \
+    IDENTITY_TOKEN='${IDENTITY_TOKEN}' \
+    OWNER_UUID='${OWNER_UUID}' \
+    ./start.sh" &
+
+# Process ID of su
+killpid="$!"
+wait "$killpid"
