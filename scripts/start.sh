@@ -24,7 +24,6 @@ MAX_MEMORY="${MAX_MEMORY:-8192}"
 
 # Check if HytaleServer.jar exists
 SERVER_JAR="$SERVER_FILES/Server/HytaleServer.jar"
-ASSETS_ZIP="$SERVER_FILES/Assets.zip"
 
 if [ ! -f "$SERVER_JAR" ]; then
     LogError "Could not find HytaleServer.jar at: $SERVER_JAR"
@@ -32,14 +31,7 @@ if [ ! -f "$SERVER_JAR" ]; then
     exit 1
 fi
 
-if [ ! -f "$ASSETS_ZIP" ]; then
-    LogError "Could not find Assets.zip at: $ASSETS_ZIP"
-    LogError "Please ensure the server files are properly downloaded."
-    exit 1
-fi
-
 LogInfo "Found server JAR: ${SERVER_JAR}"
-LogInfo "Found assets: ${ASSETS_ZIP}"
 LogInfo "Server starting on port ${DEFAULT_PORT}"
 LogInfo "Server name: ${SERVER_NAME}"
 LogInfo "Max players: ${MAX_PLAYERS}"
@@ -78,7 +70,6 @@ fi
 
 # Add the JAR and required arguments
 STARTUP_CMD="${STARTUP_CMD} -jar ${SERVER_JAR}"
-STARTUP_CMD="${STARTUP_CMD} --assets ${ASSETS_ZIP}"
 STARTUP_CMD="${STARTUP_CMD} --bind 0.0.0.0:${DEFAULT_PORT}"
 STARTUP_CMD="${STARTUP_CMD} --auth-mode ${AUTH_MODE}"
 

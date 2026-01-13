@@ -52,7 +52,7 @@ export IDENTITY_TOKEN
 export OWNER_UUID
 
 # Start the server as hytale user
-su - hytale -c "cd /home/hytale/server && \
+su hytale -c "cd /home/hytale/Server && \
     DEFAULT_PORT='${DEFAULT_PORT}' \
     SERVER_NAME='${SERVER_NAME}' \
     MAX_PLAYERS='${MAX_PLAYERS}' \
