@@ -67,6 +67,11 @@
           "type": "object",
           "description": "Additional labels to add to the PVC",
           "additionalProperties": { "type": "string" }
+        },
+        "annotations": {
+          "type": "object",
+          "description": "Additional annotations to add to the PVC",
+          "additionalProperties": { "type": "string" }
         }
       }
     },

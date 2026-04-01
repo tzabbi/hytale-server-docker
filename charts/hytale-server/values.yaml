@@ -25,6 +25,8 @@ persistence:
   accessMode: ReadWriteOnce
   # -- additional labels to add to the PVC
   labels: {}
+  # -- additional annotations to add to the PVC
+  annotations: {}
 
 # -- resource management (CPU and memory) of the server
 # -- best practice is to set memory request and limit
