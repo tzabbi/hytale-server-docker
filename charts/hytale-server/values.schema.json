@@ -62,6 +62,11 @@
         "accessMode": {
           "type": "string",
           "enum": ["ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany"]
+        },
+        "labels": {
+          "type": "object",
+          "description": "Additional labels to add to the PVC",
+          "additionalProperties": { "type": "string" }
         }
       }
     },
